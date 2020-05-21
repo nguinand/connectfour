@@ -1,0 +1,12 @@
+.start{
+    border-radius: 60%;
+    border-width: 3px;
+    border-color: yellow;
+}
+button {
+    height: 100px;
+    width: 100px;
+    background-color: #bbb;
+    border-radius: 50%;
+    border-color:black;
+}
