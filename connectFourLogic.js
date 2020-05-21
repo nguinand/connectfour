@@ -44,8 +44,14 @@ $('button').click(function(){
         function buttonResolver() {
             return new Promise(resolve => {
               setTimeout(() => {
+                let check = verticalWinCheck(elementColIndex, activeColor);
                 resolve('resolved');
-                buttonRelease =true;
+                if(check){
+                    console.log("WINNER");
+                }else{
+                   buttonRelease =true; 
+                }
+                
               }, 1700);
             });
           }
@@ -62,6 +68,28 @@ $('button').click(function(){
     }
 })
 
+function verticalWinCheck(index, color){
+    let hit = 0;
+    $('tr').each(function(count){
+        let row = this;
+        let button = row.cells[index].children.button;
+        if($(button).css('background-color') == color){
+            hit++;
+            console.log(hit);
+        }
+        else{
+            hit = 0;
+        }
+        if(hit === 4){
+            console.log("WINNER")
+            return;
+        }
+    })
+    if(hit === 4){
+        return true;
+    }
+}
+
 function cascadeDown(element, index, playerColor){
     buttonRelease=false;
     $('tr').each(function(count){
@@ -69,17 +97,15 @@ function cascadeDown(element, index, playerColor){
         let row = this;
         let colSize= row.cells.length
         // console.log(count);
-        console.log(row);
+        // console.log(row);
         // console.log(row.cells);
         // console.log(row.cells[index])
         // console.log(row.cells[index].children)
         // console.log(row.cells[index].children.button)
         let button = row.cells[index].children.button;
         // let buttonColor = $(button).css('background-color')
-        console.log(element)
         
         try{
-            console.log('try')
             let nextCell = $('tr')[count+1].cells[index].children.button
             // console.log(nextCell);
             if($(nextCell).css('background-color') == "rgb(187, 187, 187)"){
@@ -95,7 +121,7 @@ function cascadeDown(element, index, playerColor){
         }
         catch(err){
             // $(button).css('background-color', playerColor)
-            console.log(err)
+            // console.log(err)
         }
         
     })
