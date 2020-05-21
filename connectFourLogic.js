@@ -28,6 +28,7 @@ $('button').mouseleave(function(){
 $('button').click(function(){
     // console.log($(this).attr('class'));
     elementColIndex = $('.start').index($(this));
+    activeColor = (player1Active ? player1Color : player2Color);
     // console.log(elementColIndex);
     //Because we changed the background color to yellow, we have to move our mouse away to keep clicking
     if($(this).css('background-color') == 'rgb(153, 153, 0)' && $(this).attr('class') == 'start' && buttonRelease){
@@ -50,16 +51,8 @@ $('button').click(function(){
           }
           asyncCall();
 
-        if(player1Active){
-            player1Active = false;
-            cascadeDown($(this), elementColIndex, player1Color);
-            // $(this).css('background-color',player1Color);
-        }
-        else{
-            // $(this).css('background-color',player2Color);
-            player1Active=true;
-            cascadeDown($(this), elementColIndex, player2Color);
-        }
+        cascadeDown($(this), elementColIndex, activeColor);
+        player1Active = !player1Active;
     }
     else{
         console.log('else')
