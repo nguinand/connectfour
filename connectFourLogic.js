@@ -7,6 +7,7 @@ var player1Active = true;
 var inactiveColor = "rgb(187, 187, 187)"
 var elementColIndex;
 var buttonRelease = true;
+var lastIndex = 0;
 
 
 
@@ -35,6 +36,7 @@ $('button').click(function(){
         
         //This async function is required to lock down multiple button clicks
         buttonRelease = false;
+        cascadeDown($(this), elementColIndex, activeColor);
         async function asyncCall() {
             // console.log('calling');
             const result = await buttonResolver();
@@ -44,20 +46,18 @@ $('button').click(function(){
         function buttonResolver() {
             return new Promise(resolve => {
               setTimeout(() => {
-                let check = verticalWinCheck(elementColIndex, activeColor);
+                  console.log(lastIndex);
+                verticalWinCheck(elementColIndex, activeColor);
+                horizontalWinCheck(activeColor);
                 resolve('resolved');
-                if(check){
-                    console.log("WINNER");
-                }else{
-                   buttonRelease =true; 
-                }
+                buttonRelease = true;
                 
               }, 1700);
             });
           }
           asyncCall();
 
-        cascadeDown($(this), elementColIndex, activeColor);
+        
         player1Active = !player1Active;
     }
     else{
@@ -68,6 +68,27 @@ $('button').click(function(){
     }
 })
 
+function horizontalWinCheck(color){
+    let hit = 0;
+
+    var row = $('tr')[lastIndex].cells
+    // console.log(row);
+    for (let item of row){
+        console.log(item.children.button);
+        let button = item.children.button;
+        if($(button).css('background-color') == color){
+            hit++;
+        }
+        else{
+            hit = 0;
+        }
+        if(hit == 4){
+            alert("WINNER");
+            location.reload();
+        }
+    }
+}
+
 function verticalWinCheck(index, color){
     let hit = 0;
     $('tr').each(function(count){
@@ -75,19 +96,15 @@ function verticalWinCheck(index, color){
         let button = row.cells[index].children.button;
         if($(button).css('background-color') == color){
             hit++;
-            console.log(hit);
         }
         else{
             hit = 0;
         }
         if(hit === 4){
-            console.log("WINNER")
-            return;
+            alert("WINNER");
+            location.reload();
         }
     })
-    if(hit === 4){
-        return true;
-    }
 }
 
 function cascadeDown(element, index, playerColor){
@@ -111,12 +128,13 @@ function cascadeDown(element, index, playerColor){
             if($(nextCell).css('background-color') == "rgb(187, 187, 187)"){
                 setTimeout(function(){
                     $(nextCell).css('background-color', playerColor)
-                $(button).css('background-color', 'rgb(187, 187, 187)')
-
+                    $(button).css('background-color', 'rgb(187, 187, 187)')
+                    lastIndex = count +1
                 }, 300*count)
             }
             else {
                 $(element).css('background-color', playerColor);
+
             }
         }
         catch(err){
