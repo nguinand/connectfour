@@ -56,9 +56,9 @@ $('button').click(function(){
 
         
         player1Active = !player1Active;
-        activeColor = (player1Active ? player1Color : player2Color);
+        let boxColor = (player1Active ? player1Color : player2Color);
         let text = (player1Active ? "BLUE" : "RED");
-        $('#box').css('background-color', activeColor)
+        $('#box').css('background-color', boxColor)
         $('#box').text(text)
 
     }
@@ -76,62 +76,54 @@ function diagnolWinCheck(color){
     let x = elementColIndex;
     let y = lastIndex;
     let hit = 0;
+    let tempArr = [];
+
+    //we use a temp array to store them and then reverse it on the first pass.
     while(x >=0 && y >=0){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
-            hit++;
-        }
-        else{
-            hit =0;
-        }
-        if(hit ==4){
-            alert("WINNER");
-            // location.reload();
-        }
+        // buttonSet.add(button);
+        tempArr.push(button);
         x--;
         y--;
     }
-    x = elementColIndex;
-    y = lastIndex;
+    tempArr.reverse()
+
+    x = elementColIndex +1;
+    y = lastIndex +1;
     while(y <=5 && x<=6){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
-            hit++;
-        }
-        else{
-            hit =0;
-        }
-        if(hit ==4){
-            alert("WINNER");
-            // location.reload();
-        }
+        tempArr.push(button)
         x++;
         y++;
     }
-
+    checkDiagWin(tempArr, color);
+    //*****************End of first diagnol search*********** */
     x = elementColIndex;
     y = lastIndex;
+    tempArr =[]
     hit = 0;
     while(x <=6 && y >=0){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
-            hit++;
-        }
-        else{
-            hit =0;
-        }
-        if(hit ==4){
-            alert("WINNER");
-            // location.reload();
-        }
+        tempArr.push(button);
         x++;
         y--;
     }
-    x = elementColIndex;
-    y = lastIndex;
+    tempArr.reverse()
+    x = elementColIndex -1;
+    y = lastIndex +1;
     while(y <=5 && x>=0){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
+        tempArr.push(button);
+        x--;
+        y++;
+    }
+    checkDiagWin(tempArr,color);
+}
+
+function checkDiagWin(tempArr, color){
+    let hit = 0;
+    tempArr.forEach(element => {
+        if($(element).css('background-color') == color){
             hit++;
         }
         else{
@@ -139,11 +131,10 @@ function diagnolWinCheck(color){
         }
         if(hit ==4){
             alert("WINNER");
-            // location.reload();
+            location.reload();
         }
-        x--;
-        y++;
-    }
+    });
+    
 }
 
 function horizontalWinCheck(color){
@@ -160,7 +151,7 @@ function horizontalWinCheck(color){
         }
         if(hit == 4){
             alert("WINNER");
-            // location.reload();
+            location.reload();
         }
     }
 }
@@ -178,7 +169,7 @@ function verticalWinCheck(index, color){
         }
         if(hit === 4){
             alert("WINNER");
-            // location.reload();
+            location.reload();
         }
     })
 }
