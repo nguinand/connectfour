@@ -27,11 +27,8 @@ $('button').mouseleave(function(){
 
 
 $('button').click(function(){
-    // console.log($(this).attr('class'));
     elementColIndex = $('.start').index($(this));
-    // console.log(elementColIndex);
     activeColor = (player1Active ? player1Color : player2Color);
-    // console.log(elementColIndex);
     //Because we changed the background color to yellow, we have to move our mouse away to keep clicking
     if($(this).css('background-color') == 'rgb(153, 153, 0)' && $(this).attr('class') == 'start' && buttonRelease){
         
@@ -41,13 +38,11 @@ $('button').click(function(){
         async function asyncCall() {
             // console.log('calling');
             const result = await buttonResolver();
-            // console.log(result);
             // expected output: 'resolved'
           }
         function buttonResolver() {
             return new Promise(resolve => {
               setTimeout(() => {
-                //   console.log(lastIndex);
                 verticalWinCheck(elementColIndex, activeColor);
                 horizontalWinCheck(activeColor);
                 diagnolWinCheck(activeColor)
@@ -61,19 +56,23 @@ $('button').click(function(){
 
         
         player1Active = !player1Active;
+        activeColor = (player1Active ? player1Color : player2Color);
+        let text = (player1Active ? "BLUE" : "RED");
+        $('#box').css('background-color', activeColor)
+        $('#box').text(text)
+
     }
     else{
-        console.log('else')
-        console.log($(this).css('background-color') == 'rgb(153, 153, 0)');
-        console.log($(this).attr('class') == 'start');
-        console.log(buttonRelease);
+        // console.log('else')
+        // console.log($(this).css('background-color') == 'rgb(153, 153, 0)');
+        // console.log($(this).attr('class') == 'start');
+        // console.log(buttonRelease);
     }
 })
 
+//Diagnoal Checking. We first check from left to right. Then from right side to left.
 function diagnolWinCheck(color){
-    var button = $('tr')[lastIndex].cells[elementColIndex];
-    // console.log(button);
-    //The reason we put +1, is because we already know THAT CURRENT chip is the correct color.
+    // var button = $('tr')[lastIndex].cells[elementColIndex];
     let x = elementColIndex;
     let y = lastIndex;
     let hit = 0;
@@ -87,7 +86,7 @@ function diagnolWinCheck(color){
         }
         if(hit ==4){
             alert("WINNER");
-            location.reload();
+            // location.reload();
         }
         x--;
         y--;
@@ -104,7 +103,7 @@ function diagnolWinCheck(color){
         }
         if(hit ==4){
             alert("WINNER");
-            location.reload();
+            // location.reload();
         }
         x++;
         y++;
@@ -123,7 +122,7 @@ function diagnolWinCheck(color){
         }
         if(hit ==4){
             alert("WINNER");
-            location.reload();
+            // location.reload();
         }
         x++;
         y--;
@@ -140,7 +139,7 @@ function diagnolWinCheck(color){
         }
         if(hit ==4){
             alert("WINNER");
-            location.reload();
+            // location.reload();
         }
         x--;
         y++;
@@ -161,7 +160,7 @@ function horizontalWinCheck(color){
         }
         if(hit == 4){
             alert("WINNER");
-            location.reload();
+            // location.reload();
         }
     }
 }
@@ -179,7 +178,7 @@ function verticalWinCheck(index, color){
         }
         if(hit === 4){
             alert("WINNER");
-            location.reload();
+            // location.reload();
         }
     })
 }
@@ -190,18 +189,10 @@ function cascadeDown(element, index, playerColor){
         //We get the rows going down, get the button at that index and go grab that button
         let row = this;
         let colSize= row.cells.length
-        // console.log(count);
-        // console.log(row);
-        // console.log(row.cells);
-        // console.log(row.cells[index])
-        // console.log(row.cells[index].children)
-        // console.log(row.cells[index].children.button)
         let button = row.cells[index].children.button;
-        // let buttonColor = $(button).css('background-color')
         
         try{
             let nextCell = $('tr')[count+1].cells[index].children.button
-            // console.log(nextCell);
             if($(nextCell).css('background-color') == "rgb(187, 187, 187)"){
                 setTimeout(function(){
                     $(nextCell).css('background-color', playerColor)
@@ -216,8 +207,6 @@ function cascadeDown(element, index, playerColor){
             }
         }
         catch(err){
-            // $(button).css('background-color', playerColor)
-            // console.log(err)
         }
         
     })
