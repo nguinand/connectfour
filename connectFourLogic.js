@@ -71,8 +71,6 @@ $('button').click(function(){
 })
 
 function diagnolWinCheck(color){
-    console.log(elementColIndex);
-    console.log(lastIndex);
     var button = $('tr')[lastIndex].cells[elementColIndex];
     // console.log(button);
     //The reason we put +1, is because we already know THAT CURRENT chip is the correct color.
@@ -111,7 +109,42 @@ function diagnolWinCheck(color){
         x++;
         y++;
     }
-    console.log(hit);
+
+    x = elementColIndex;
+    y = lastIndex;
+    hit = 0;
+    while(x <=6 && y >=0){
+        let button = $('tr')[y].cells[x].children.button
+        if($(button).css('background-color') == color){
+            hit++;
+        }
+        else{
+            hit =0;
+        }
+        if(hit ==4){
+            alert("WINNER");
+            location.reload();
+        }
+        x++;
+        y--;
+    }
+    x = elementColIndex;
+    y = lastIndex;
+    while(y <=5 && x>=0){
+        let button = $('tr')[y].cells[x].children.button
+        if($(button).css('background-color') == color){
+            hit++;
+        }
+        else{
+            hit =0;
+        }
+        if(hit ==4){
+            alert("WINNER");
+            location.reload();
+        }
+        x--;
+        y++;
+    }
 }
 
 function horizontalWinCheck(color){
