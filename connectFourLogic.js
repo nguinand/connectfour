@@ -29,6 +29,7 @@ $('button').mouseleave(function(){
 $('button').click(function(){
     // console.log($(this).attr('class'));
     elementColIndex = $('.start').index($(this));
+    // console.log(elementColIndex);
     activeColor = (player1Active ? player1Color : player2Color);
     // console.log(elementColIndex);
     //Because we changed the background color to yellow, we have to move our mouse away to keep clicking
@@ -46,9 +47,10 @@ $('button').click(function(){
         function buttonResolver() {
             return new Promise(resolve => {
               setTimeout(() => {
-                  console.log(lastIndex);
+                //   console.log(lastIndex);
                 verticalWinCheck(elementColIndex, activeColor);
                 horizontalWinCheck(activeColor);
+                diagnolWinCheck(activeColor)
                 resolve('resolved');
                 buttonRelease = true;
                 
@@ -68,13 +70,55 @@ $('button').click(function(){
     }
 })
 
+function diagnolWinCheck(color){
+    console.log(elementColIndex);
+    console.log(lastIndex);
+    var button = $('tr')[lastIndex].cells[elementColIndex];
+    // console.log(button);
+    //The reason we put +1, is because we already know THAT CURRENT chip is the correct color.
+    let x = elementColIndex;
+    let y = lastIndex;
+    let hit = 0;
+    while(x >=0 && y >=0){
+        let button = $('tr')[y].cells[x].children.button
+        if($(button).css('background-color') == color){
+            hit++;
+        }
+        else{
+            hit =0;
+        }
+        if(hit ==4){
+            alert("WINNER");
+            location.reload();
+        }
+        x--;
+        y--;
+    }
+    x = elementColIndex;
+    y = lastIndex;
+    while(y <=5 && x<=6){
+        let button = $('tr')[y].cells[x].children.button
+        if($(button).css('background-color') == color){
+            hit++;
+        }
+        else{
+            hit =0;
+        }
+        if(hit ==4){
+            alert("WINNER");
+            location.reload();
+        }
+        x++;
+        y++;
+    }
+    console.log(hit);
+}
+
 function horizontalWinCheck(color){
     let hit = 0;
 
     var row = $('tr')[lastIndex].cells
-    // console.log(row);
     for (let item of row){
-        console.log(item.children.button);
         let button = item.children.button;
         if($(button).css('background-color') == color){
             hit++;
@@ -134,6 +178,7 @@ function cascadeDown(element, index, playerColor){
             }
             else {
                 $(element).css('background-color', playerColor);
+                lastIndex=0
 
             }
         }
