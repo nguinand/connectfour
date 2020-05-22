@@ -10,3 +10,12 @@ button {
     border-radius: 50%;
     border-color:black;
 }
+
+table {
+    border: 50px solid black;
+  }
+
+
+td {
+  border: 5px solid black;
+}
