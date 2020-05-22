@@ -27,11 +27,8 @@ $('button').mouseleave(function(){
 
 
 $('button').click(function(){
-    // console.log($(this).attr('class'));
     elementColIndex = $('.start').index($(this));
-    // console.log(elementColIndex);
     activeColor = (player1Active ? player1Color : player2Color);
-    // console.log(elementColIndex);
     //Because we changed the background color to yellow, we have to move our mouse away to keep clicking
     if($(this).css('background-color') == 'rgb(153, 153, 0)' && $(this).attr('class') == 'start' && buttonRelease){
         
@@ -41,13 +38,11 @@ $('button').click(function(){
         async function asyncCall() {
             // console.log('calling');
             const result = await buttonResolver();
-            // console.log(result);
             // expected output: 'resolved'
           }
         function buttonResolver() {
             return new Promise(resolve => {
               setTimeout(() => {
-                //   console.log(lastIndex);
                 verticalWinCheck(elementColIndex, activeColor);
                 horizontalWinCheck(activeColor);
                 diagnolWinCheck(activeColor)
@@ -61,78 +56,74 @@ $('button').click(function(){
 
         
         player1Active = !player1Active;
+        let boxColor = (player1Active ? player1Color : player2Color);
+        let text = (player1Active ? "BLUE" : "RED");
+        $('#box').css('background-color', boxColor)
+        $('#box').text(text)
+
     }
     else{
-        console.log('else')
-        console.log($(this).css('background-color') == 'rgb(153, 153, 0)');
-        console.log($(this).attr('class') == 'start');
-        console.log(buttonRelease);
+        // console.log('else')
+        // console.log($(this).css('background-color') == 'rgb(153, 153, 0)');
+        // console.log($(this).attr('class') == 'start');
+        // console.log(buttonRelease);
     }
 })
 
+//Diagnoal Checking. We first check from left to right. Then from right side to left.
 function diagnolWinCheck(color){
-    var button = $('tr')[lastIndex].cells[elementColIndex];
-    // console.log(button);
-    //The reason we put +1, is because we already know THAT CURRENT chip is the correct color.
+    // var button = $('tr')[lastIndex].cells[elementColIndex];
     let x = elementColIndex;
     let y = lastIndex;
     let hit = 0;
+    let tempArr = [];
+
+    //we use a temp array to store them and then reverse it on the first pass.
     while(x >=0 && y >=0){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
-            hit++;
-        }
-        else{
-            hit =0;
-        }
-        if(hit ==4){
-            alert("WINNER");
-            location.reload();
-        }
+        // buttonSet.add(button);
+        tempArr.push(button);
         x--;
         y--;
     }
-    x = elementColIndex;
-    y = lastIndex;
+    tempArr.reverse()
+
+    x = elementColIndex +1;
+    y = lastIndex +1;
     while(y <=5 && x<=6){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
-            hit++;
-        }
-        else{
-            hit =0;
-        }
-        if(hit ==4){
-            alert("WINNER");
-            location.reload();
-        }
+        tempArr.push(button)
         x++;
         y++;
     }
-
+    checkDiagWin(tempArr, color);
+    //*****************End of first diagnol search*********** */
     x = elementColIndex;
     y = lastIndex;
+    tempArr =[]
     hit = 0;
     while(x <=6 && y >=0){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
-            hit++;
-        }
-        else{
-            hit =0;
-        }
-        if(hit ==4){
-            alert("WINNER");
-            location.reload();
-        }
+        tempArr.push(button);
         x++;
         y--;
     }
-    x = elementColIndex;
-    y = lastIndex;
+    tempArr.reverse()
+    x = elementColIndex -1;
+    y = lastIndex +1;
     while(y <=5 && x>=0){
         let button = $('tr')[y].cells[x].children.button
-        if($(button).css('background-color') == color){
+        tempArr.push(button);
+        x--;
+        y++;
+    }
+    checkDiagWin(tempArr,color);
+}
+
+function checkDiagWin(tempArr, color){
+    let hit = 0;
+    tempArr.forEach(element => {
+        if($(element).css('background-color') == color){
             hit++;
         }
         else{
@@ -142,9 +133,8 @@ function diagnolWinCheck(color){
             alert("WINNER");
             location.reload();
         }
-        x--;
-        y++;
-    }
+    });
+    
 }
 
 function horizontalWinCheck(color){
@@ -190,18 +180,10 @@ function cascadeDown(element, index, playerColor){
         //We get the rows going down, get the button at that index and go grab that button
         let row = this;
         let colSize= row.cells.length
-        // console.log(count);
-        // console.log(row);
-        // console.log(row.cells);
-        // console.log(row.cells[index])
-        // console.log(row.cells[index].children)
-        // console.log(row.cells[index].children.button)
         let button = row.cells[index].children.button;
-        // let buttonColor = $(button).css('background-color')
         
         try{
             let nextCell = $('tr')[count+1].cells[index].children.button
-            // console.log(nextCell);
             if($(nextCell).css('background-color') == "rgb(187, 187, 187)"){
                 setTimeout(function(){
                     $(nextCell).css('background-color', playerColor)
@@ -216,8 +198,6 @@ function cascadeDown(element, index, playerColor){
             }
         }
         catch(err){
-            // $(button).css('background-color', playerColor)
-            // console.log(err)
         }
         
     })

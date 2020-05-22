@@ -10,3 +10,18 @@ button {
     border-radius: 50%;
     border-color:black;
 }
+
+.bg {
+    background-color: black;
+  }
+
+
+td {
+  border: 5px solid black;
+}
+
+#box {
+    border: 2px solid black;
+    background-color: rgb(86, 151, 255);
+    color: white
+}
